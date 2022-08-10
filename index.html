@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+  </head>
+  <body>
+    <script src="https://player.glomex.com/integration/1/glomex-player.js"></script>
+
+    <script>
+      let player;
+
+      function getParameterByName(name) {
+        var match = RegExp("[?&]" + name + "=([^&]*)").exec(
+          window.location.search
+        );
+        return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+      }
+      var integration_id = getParameterByName("integration_id");
+      var playlist_id = getParameterByName("playlist_id");
+      var autoplay = getParameterByName("autoplay") ?? false;
+      player = document.createElement("glomex-player");
+      document.body.appendChild(player);
+      player.addEventListener("connect", function () {
+        player.setup({
+          integrationId: integration_id,
+          playlistId: playlist_id,
+        });
+      });
+      player.addEventListener("ready", function () {
+        console.log("Glomex Player is ready");
+
+        if (autoplay) {
+          playVideo();
+        }
+      });
+      const widget = document.querySelector("glomex-player");
+      const sendHeight = () => {
+        window.flutter_inappwebview.callHandler(
+          "OnHeightChanged",
+          document.body.scrollHeight
+        );
+      };
+      const onWidgetResize = (widgets) => sendHeight();
+      const resize_ob = new ResizeObserver(onWidgetResize);
+      resize_ob.observe(widget);
+
+      function stopVideo() {
+        console.log("stopVideo");
+
+        player.stop();
+      }
+
+      function playVideo() {
+        console.log("play");
+
+        player.play();
+      }
+      function pauseVideo() {
+        try {
+          console.log("pauseVideo");
+
+          player.pause();
+        } catch (error) {
+          console.log("error pauseVideo");
+          console.log(error);
+        }
+      }
+    </script>
+  </body>
+</html>
