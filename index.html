@@ -17,6 +17,7 @@
       }
       var integration_id = getParameterByName("integration_id");
       var playlist_id = getParameterByName("playlist_id");
+      var player_id = getParameterByName("player_id")
       var autoplay = getParameterByName("autoplay") ?? false;
       player = document.createElement("glomex-player");
       document.body.appendChild(player);
@@ -24,6 +25,7 @@
         player.setup({
           integrationId: integration_id,
           playlistId: playlist_id,
+          playerId:player_id,
         });
       });
       player.addEventListener("ready", function () {
